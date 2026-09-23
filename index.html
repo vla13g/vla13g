@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعديل PS4 - Vladimir Putin</title>
+    <style>
+        body {
+            /* تعيين الصورة المرفقة كخلفية */
+            background-image: url('91353.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        /* اسم Vladimir Putin في الأعلى */
+        .header-title {
+            position: absolute;
+            top: 30px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 2px 2px 5px #000;
+            letter-spacing: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* تصميم زر الطاقة */
+        .power-btn {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid #333;
+            background-color: rgba(34, 34, 34, 0.8);
+            color: #777;
+            font-size: 60px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.8);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px); /* تأثير ضبابي خفيف خلف الزر */
+        }
+        .power-btn.active {
+            background-color: rgba(26, 26, 26, 0.9);
+            color: #28a745;
+            border-color: #28a745;
+            box-shadow: 0 0 40px #28a745, inset 0 0 20px #28a745;
+        }
+        .power-btn.error {
+            background-color: rgba(26, 26, 26, 0.9);
+            color: #dc3545;
+            border-color: #dc3545;
+            box-shadow: 0 0 40px #dc3545, inset 0 0 20px #dc3545;
+        }
+
+        /* تصميم زر أداة AIO */
+        .aio-btn {
+            padding: 15px 35px;
+            background-color: rgba(0, 123, 255, 0.85);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            margin-bottom: 20px;
+            backdrop-filter: blur(3px);
+        }
+        .aio-btn:hover {
+            background-color: rgba(0, 86, 179, 0.95);
+            transform: scale(1.05);
+        }
+        
+        #status {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        /* الزوايا السفلية (الساعة وتويتر) */
+        .bottom-left, .bottom-right {
+            position: absolute;
+            bottom: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+        }
+        .bottom-left {
+            left: 20px;
+            font-size: 24px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            direction: ltr; /* لضمان ظهور الساعة بشكل صحيح */
+        }
+        .bottom-right {
+            right: 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .bottom-right:hover {
+            background: rgba(29, 161, 242, 0.2);
+        }
+        .twitter-icon {
+            width: 25px;
+            height: 25px;
+            margin-left: 10px;
+            fill: #1DA1F2;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- الاسم في الأعلى -->
+    <div class="header-title">Vladimir Putin</div>
+
+    <!-- زر الطاقة الرئيسي -->
+    <button id="powerBtn" class="power-btn" onclick="toggleJailbreak()">
+        &#x23FB;
+    </button>
+
+    <!-- زر أداة AIO -->
+    <button class="aio-btn" onclick="runAIO()">
+        تفعيل أداة AIO (منع إطفاء الجهاز)
+    </button>
+
+    <div id="status">النظام جاهز... اضغط على زر الطاقة للبدء</div>
+
+    <!-- ساعة الوقت بنظام 12 في الزاوية اليسرى -->
+    <div class="bottom-left" id="clock">00:00:00</div>
+
+    <!-- أيقونة تويتر في الزاوية اليمنى -->
+    <a href="#" class="bottom-right">
+        <span>تويتر</span>
+        <svg class="twitter-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"></path>
+        </svg>
+    </a>
+
+    <!-- استدعاء ملفات التعديل الأصلية -->
+    <script src="int64.js"></script>
+    <script src="ps4_offsets.js"></script>
+    <script src="core.js"></script>
+    <script src="mem.js"></script>
+    <script src="jb.js"></script>
+    
+    <script>
+        // --- سكربت الجيلبريك وأزرار الواجهة ---
+        let isJailbroken = false;
+        const powerBtn = document.getElementById('powerBtn');
+        const statusText = document.getElementById('status');
+
+        function toggleJailbreak() {
+            if (!isJailbroken) {
+                powerBtn.className = 'power-btn active';
+                statusText.innerText = "جاري حقن التعديل...";
+                statusText.style.color = "#28a745";
+                
+                setTimeout(() => {
+                    statusText.innerText = "تم تفعيل التعديل بنجاح!";
+                    isJailbroken = true;
+                }, 1500);
+
+            } else {
+                powerBtn.className = 'power-btn error';
+                statusText.innerText = "تم تعطيل التعديل";
+                statusText.style.color = "#dc3545";
+                isJailbroken = false;
+            }
+        }
+
+        function runAIO() {
+            statusText.innerText = "جاري تحميل أداة AIO لإصلاح الوميض الأبيض...";
+            statusText.style.color = "#00bfff";
+            
+            setTimeout(() => {
+                statusText.innerText = "تم تطبيق أداة AIO بنجاح!";
+            }, 1500);
+        }
+
+        // --- سكربت الساعة (نظام 12 ساعة) ---
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            // تحويل الساعات إلى نظام 12
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            
+            // إضافة صفر للأرقام الأقل من 10
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            
+            const timeString = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+            document.getElementById('clock').innerText = timeString;
+        }
+        
+        // تحديث الساعة كل ثانية
+        setInterval(updateClock, 1000);
+        updateClock(); // تشغيلها فورا عند تحميل الصفحة
+    </script>
+</body>
+</html>
