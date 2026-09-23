@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تعديل PS4 - Vladimir Putin</title>
+    <title>تعديل PS4 - 13.02</title>
     <style>
         body {
             background-image: url('91353.png');
@@ -55,10 +55,10 @@
         }
         .modal-content button:hover { background: #008cba; color: white; }
 
-        /* اسم Vladimir Putin في الأعلى */
+        /* النصوص العلوية */
         .header-title {
             position: absolute;
-            top: 30px;
+            top: 20px;
             font-size: 40px;
             font-weight: bold;
             color: #fff;
@@ -66,8 +66,20 @@
             letter-spacing: 3px;
             font-family: 'Courier New', Courier, monospace;
         }
+        
+        .version-badge {
+            position: absolute;
+            top: 75px;
+            background: rgba(220, 53, 69, 0.85);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+        }
 
-        /* تصميم زر الجيلبريك الكبير */
+        /* زر الجيلبريك */
         .power-btn {
             padding: 25px 50px;
             border-radius: 20px;
@@ -79,18 +91,17 @@
             cursor: pointer;
             transition: all 0.4s ease;
             box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.8);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             backdrop-filter: blur(3px);
             text-transform: uppercase;
         }
-        /* حالة التفعيل (ON) */
         .power-btn.active {
             background-color: rgba(26, 26, 26, 0.9);
             color: #28a745;
             border-color: #28a745;
             box-shadow: 0 0 40px #28a745, inset 0 0 20px #28a745;
+            cursor: default;
         }
-        /* حالة الإيقاف (OFF) */
         .power-btn.error {
             background-color: rgba(26, 26, 26, 0.9);
             color: #dc3545;
@@ -99,10 +110,33 @@
         }
 
         #status {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
             color: #fff;
             text-shadow: 2px 2px 4px #000;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        /* صندوق الملاحظة */
+        .info-note {
+            background: rgba(0, 0, 0, 0.7);
+            border-right: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 600px;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.5;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        
+        .info-note strong {
+            color: #ffc107;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 18px;
         }
 
         /* الزوايا السفلية */
@@ -146,7 +180,6 @@
 </head>
 <body>
 
-    <!-- نافذة الإعداد لأول مرة -->
     <div id="setupModal">
         <div class="modal-content">
             <h2>الإعداد لأول مرة<br>First Time Setup</h2>
@@ -169,20 +202,22 @@
         </div>
     </div>
 
-    <!-- الواجهة الرئيسية -->
     <div class="header-title">Vladimir Putin</div>
+    <div class="version-badge" id="versionText">هذا الرابط يدعم الإصدار 13.02 فقط</div>
 
-    <!-- زر الجيلبريك -->
-    <button id="powerBtn" class="power-btn" onclick="toggleJailbreak()">
-        Jailbreak OFF
+    <button id="powerBtn" class="power-btn" onclick="startJailbreak()">
+        JAILBREAK
     </button>
 
     <div id="status">النظام جاهز... اضغط على الزر للبدء</div>
 
-    <!-- ساعة الوقت -->
+    <div class="info-note" id="noteBox">
+        <strong id="noteTitle">ملاحظة:</strong>
+        <span id="noteText">يجب مسح جميع الصفحات في المتصفح (Webkit)، وإعادة كتابة الرابط، ومن ثم تفعيل الجيلبريك.</span>
+    </div>
+
     <div class="bottom-left" id="clock">00:00:00</div>
 
-    <!-- أيقونة تويتر -->
     <a href="#" class="bottom-right" id="twitterBtn">
         <span id="twitterText">تويتر</span>
         <svg class="twitter-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -198,45 +233,52 @@
     <script src="jb.js"></script>
     
     <script>
-        // --- قاموس اللغات ---
         const translations = {
             ar: {
+                version: "هذا الرابط يدعم الإصدار 13.02 فقط",
                 statusReady: "النظام جاهز... اضغط على الزر للبدء",
                 statusInjecting: "جاري حقن التعديل...",
                 statusSuccess: "تم تفعيل التعديل بنجاح!",
-                statusOff: "تم تعطيل التعديل",
-                jbOn: "جيلبريك ON",
-                jbOff: "جيلبريك OFF",
+                statusError: "حدث خطأ، يرجى المحاولة مرة ثانية",
+                noteTitle: "ملاحظة:",
+                noteText: "يجب مسح جميع الصفحات في المتصفح (Webkit)، وإعادة كتابة الرابط، ومن ثم تفعيل الجيلبريك.",
+                jbBtn: "تفعيل الجيلبريك",
                 twitter: "تويتر",
                 dir: "rtl"
             },
             en: {
+                version: "This link supports version 13.02 ONLY",
                 statusReady: "System ready... Press the button to start",
                 statusInjecting: "Injecting payload...",
                 statusSuccess: "Jailbreak activated successfully!",
-                statusOff: "Jailbreak disabled",
-                jbOn: "Jailbreak ON",
-                jbOff: "Jailbreak OFF",
+                statusError: "An error occurred, please try again",
+                noteTitle: "Note:",
+                noteText: "You must clear all browser pages (Webkit), rewrite the link, and then activate the jailbreak.",
+                jbBtn: "START JAILBREAK",
                 twitter: "Twitter",
                 dir: "ltr"
             },
             pt: {
+                version: "Este link suporta APENAS a versão 13.02",
                 statusReady: "Sistema pronto... Pressione o botão para iniciar",
                 statusInjecting: "Injetando payload...",
-                statusSuccess: "Desbloqueio ativado com sucesso!",
-                statusOff: "Desbloqueio desativado",
-                jbOn: "Jailbreak ON",
-                jbOff: "Jailbreak OFF",
+                statusSuccess: "Jailbreak ativado com sucesso!",
+                statusError: "Ocorreu um erro, por favor tente novamente",
+                noteTitle: "Nota:",
+                noteText: "Você deve limpar todas as páginas do navegador (Webkit), reescrever o link e então ativar o jailbreak.",
+                jbBtn: "ATIVAR JAILBREAK",
                 twitter: "Twitter",
                 dir: "ltr"
             },
             ru: {
+                version: "Эта ссылка поддерживает ТОЛЬКО версию 13.02",
                 statusReady: "Система готова... Нажмите кнопку для запуска",
                 statusInjecting: "Внедрение payload...",
                 statusSuccess: "Взлом успешно активирован!",
-                statusOff: "Взлом отключен",
-                jbOn: "Jailbreak ON",
-                jbOff: "Jailbreak OFF",
+                statusError: "Произошла ошибка, пожалуйста, попробуйте еще раз",
+                noteTitle: "Примечание:",
+                noteText: "Вы должны очистить все страницы браузера (Webkit), переписать ссылку, а затем активировать взлом.",
+                jbBtn: "ЗАПУСК ВЗЛОМА",
                 twitter: "Twitter",
                 dir: "ltr"
             }
@@ -249,13 +291,10 @@
         const powerBtn = document.getElementById('powerBtn');
         const statusText = document.getElementById('status');
 
-        // --- نظام حفظ الإعدادات لأول مرة ---
         window.onload = function() {
             if (!localStorage.getItem('setupDone')) {
-                // إظهار نافذة الإعداد إذا لم يتم إعدادها مسبقاً
                 document.getElementById('setupModal').style.display = 'flex';
             } else {
-                // تحميل الإعدادات المحفوظة
                 currentLang = localStorage.getItem('userLang');
                 is24Hour = localStorage.getItem('timeFormat') === '24';
                 applyLanguage(currentLang);
@@ -267,7 +306,6 @@
             const lang = document.getElementById('langSelect').value;
             const timeFmt = document.getElementById('timeSelect').value;
             
-            // حفظ الإعدادات في المتصفح
             localStorage.setItem('userLang', lang);
             localStorage.setItem('timeFormat', timeFmt);
             localStorage.setItem('setupDone', 'true');
@@ -275,7 +313,6 @@
             currentLang = lang;
             is24Hour = (timeFmt === '24');
             
-            // إخفاء النافذة وتطبيق الإعدادات
             document.getElementById('setupModal').style.display = 'none';
             applyLanguage(currentLang);
         }
@@ -283,51 +320,72 @@
         function applyLanguage(lang) {
             const t = translations[lang];
             document.getElementById('htmlTag').dir = t.dir;
+            document.getElementById('versionText').innerText = t.version;
+            document.getElementById('noteTitle').innerText = t.noteTitle;
+            document.getElementById('noteText').innerText = t.noteText;
             document.getElementById('twitterText').innerText = t.twitter;
             
-            // تحديث نصوص الواجهة حسب الحالة
-            if (isJailbroken) {
-                statusText.innerText = t.statusSuccess;
-                powerBtn.innerText = t.jbOn;
+            // تغيير حدود الملاحظة لتناسب اتجاه اللغة
+            const noteBox = document.getElementById('noteBox');
+            if(t.dir === 'rtl') {
+                noteBox.style.borderRight = '4px solid #ffc107';
+                noteBox.style.borderLeft = 'none';
             } else {
-                statusText.innerText = t.statusReady;
-                powerBtn.innerText = t.jbOff;
+                noteBox.style.borderLeft = '4px solid #ffc107';
+                noteBox.style.borderRight = 'none';
             }
-        }
-
-        // --- سكربت الجيلبريك ---
-        function toggleJailbreak() {
-            const t = translations[currentLang];
             
             if (!isJailbroken) {
-                // تفعيل
-                powerBtn.className = 'power-btn active';
-                statusText.innerText = t.statusInjecting;
-                statusText.style.color = "#28a745";
-                powerBtn.innerText = "WAIT...";
-                
-                setTimeout(() => {
-                    statusText.innerText = t.statusSuccess;
-                    powerBtn.innerText = t.jbOn;
-                    isJailbroken = true;
-                }, 1500);
-
-            } else {
-                // إيقاف
-                powerBtn.className = 'power-btn error';
-                statusText.innerText = t.statusOff;
-                statusText.style.color = "#dc3545";
-                powerBtn.innerText = t.jbOff;
-                isJailbroken = false;
-                
-                setTimeout(() => {
-                    statusText.innerText = t.statusReady;
-                    statusText.style.color = "#fff";
-                }, 2000);
+                statusText.innerText = t.statusReady;
+                powerBtn.innerText = t.jbBtn;
             }
         }
 
-        // --- سكربت الساعة (يدعم 12 و 24) ---
+        // دالة بدء التفعيل (لم يعد هناك إطفاء)
+        function startJailbreak() {
+            if (isJailbroken) return; // إذا كان مفعلاً مسبقاً لا تفعل شيئاً
+
+            const t = translations[currentLang];
+            
+            // حالة البدء
+            powerBtn.className = 'power-btn active';
+            statusText.innerText = t.statusInjecting;
+            statusText.style.color = "#00bfff";
+            powerBtn.innerText = "WAIT...";
+            
+            // محاكاة عملية الجيلبريك (اربطها بسكربت التعديل الخاص بك)
+            try {
+                // runJailbreak(); أو استدعاء دوال jb.js هنا
+                
+                // هنا استخدمنا المؤقت كمحاكاة: يمكنك استدعاء دالة successJailbreak() عند نجاح الأكواد 
+                // أو دالة errorJailbreak() في حال فشل الحقن
+                setTimeout(() => {
+                    successJailbreak(); // افترضنا النجاح
+                }, 2000);
+
+            } catch (error) {
+                errorJailbreak();
+            }
+        }
+
+        function successJailbreak() {
+            const t = translations[currentLang];
+            statusText.innerText = t.statusSuccess;
+            statusText.style.color = "#28a745";
+            powerBtn.className = 'power-btn active';
+            powerBtn.innerText = "JAILBREAK ON";
+            isJailbroken = true;
+        }
+
+        function errorJailbreak() {
+            const t = translations[currentLang];
+            statusText.innerText = t.statusError;
+            statusText.style.color = "#dc3545";
+            powerBtn.className = 'power-btn error';
+            powerBtn.innerText = "ERROR";
+            isJailbroken = false;
+        }
+
         function updateClock() {
             const now = new Date();
             let hours = now.getHours();
@@ -341,7 +399,6 @@
                 hours = hours ? hours : 12; 
             }
             
-            // إضافة صفر للأرقام الأقل من 10
             hours = hours < 10 ? '0' + hours : hours;
             minutes = minutes < 10 ? '0' + minutes : minutes;
             seconds = seconds < 10 ? '0' + seconds : seconds;
