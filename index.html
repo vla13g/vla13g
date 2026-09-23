@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تعديل PS4 - 13.02</title>
+    <title>تعديل PS4 - 13.52</title>
     <style>
         body {
             background-image: url('91353.png');
@@ -203,7 +203,7 @@
     </div>
 
     <div class="header-title">Vladimir Putin</div>
-    <div class="version-badge" id="versionText">هذا الرابط يدعم الإصدار 13.02 فقط</div>
+    <div class="version-badge" id="versionText">هذا الرابط يدعم الإصدار 13.52 فما دون</div>
 
     <button id="powerBtn" class="power-btn" onclick="startJailbreak()">
         JAILBREAK
@@ -235,7 +235,7 @@
     <script>
         const translations = {
             ar: {
-                version: "هذا الرابط يدعم الإصدار 13.02 فقط",
+                version: "هذا الرابط يدعم الإصدار 13.52 فما دون",
                 statusReady: "النظام جاهز... اضغط على الزر للبدء",
                 statusInjecting: "جاري حقن التعديل...",
                 statusSuccess: "تم تفعيل التعديل بنجاح!",
@@ -247,7 +247,7 @@
                 dir: "rtl"
             },
             en: {
-                version: "This link supports version 13.02 ONLY",
+                version: "This link supports version 13.52 and below",
                 statusReady: "System ready... Press the button to start",
                 statusInjecting: "Injecting payload...",
                 statusSuccess: "Jailbreak activated successfully!",
@@ -259,7 +259,7 @@
                 dir: "ltr"
             },
             pt: {
-                version: "Este link suporta APENAS a versão 13.02",
+                version: "Este link suporta a versão 13.52 e inferior",
                 statusReady: "Sistema pronto... Pressione o botão para iniciar",
                 statusInjecting: "Injetando payload...",
                 statusSuccess: "Jailbreak ativado com sucesso!",
@@ -271,7 +271,7 @@
                 dir: "ltr"
             },
             ru: {
-                version: "Эта ссылка поддерживает ТОЛЬКО версию 13.02",
+                version: "Эта ссылка поддерживает версию 13.52 и ниже",
                 statusReady: "Система готова... Нажмите кнопку для запуска",
                 statusInjecting: "Внедрение payload...",
                 statusSuccess: "Взлом успешно активирован!",
@@ -341,26 +341,20 @@
             }
         }
 
-        // دالة بدء التفعيل (لم يعد هناك إطفاء)
         function startJailbreak() {
-            if (isJailbroken) return; // إذا كان مفعلاً مسبقاً لا تفعل شيئاً
+            if (isJailbroken) return; 
 
             const t = translations[currentLang];
             
-            // حالة البدء
             powerBtn.className = 'power-btn active';
             statusText.innerText = t.statusInjecting;
             statusText.style.color = "#00bfff";
             powerBtn.innerText = "WAIT...";
             
-            // محاكاة عملية الجيلبريك (اربطها بسكربت التعديل الخاص بك)
             try {
-                // runJailbreak(); أو استدعاء دوال jb.js هنا
-                
-                // هنا استخدمنا المؤقت كمحاكاة: يمكنك استدعاء دالة successJailbreak() عند نجاح الأكواد 
-                // أو دالة errorJailbreak() في حال فشل الحقن
+                // محاكاة عملية الجيلبريك
                 setTimeout(() => {
-                    successJailbreak(); // افترضنا النجاح
+                    successJailbreak(); 
                 }, 2000);
 
             } catch (error) {
