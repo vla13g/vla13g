@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تعديل PS4 - Vladimir Putin</title>
     <style>
         body {
-            /* تعيين الصورة المرفقة كخلفية */
             background-image: url('91353.png');
             background-size: cover;
             background-position: center;
@@ -23,6 +22,39 @@
             overflow: hidden;
         }
 
+        /* نافذة الإعداد لأول مرة */
+        #setupModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        .modal-content {
+            background: #222;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px #00bfff;
+            border: 2px solid #00bfff;
+            width: 400px;
+        }
+        .modal-content h2 { color: #fff; margin-bottom: 20px; }
+        .modal-content label { display: block; margin: 15px 0 5px; font-size: 18px; color: #ccc;}
+        .modal-content select {
+            width: 100%; padding: 10px; font-size: 16px;
+            background: #333; color: white; border: 1px solid #555; border-radius: 5px;
+        }
+        .modal-content button {
+            margin-top: 25px; padding: 12px 30px; font-size: 18px;
+            background: #00bfff; color: #000; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: bold; width: 100%;
+        }
+        .modal-content button:hover { background: #008cba; color: white; }
+
         /* اسم Vladimir Putin في الأعلى */
         .header-title {
             position: absolute;
@@ -35,30 +67,30 @@
             font-family: 'Courier New', Courier, monospace;
         }
 
-        /* تصميم زر الطاقة */
+        /* تصميم زر الجيلبريك الكبير */
         .power-btn {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
+            padding: 25px 50px;
+            border-radius: 20px;
             border: 4px solid #333;
             background-color: rgba(34, 34, 34, 0.8);
-            color: #777;
-            font-size: 60px;
+            color: #ccc;
+            font-size: 45px;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.4s ease;
             box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.8);
-            margin-bottom: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(3px); /* تأثير ضبابي خفيف خلف الزر */
+            margin-bottom: 30px;
+            backdrop-filter: blur(3px);
+            text-transform: uppercase;
         }
+        /* حالة التفعيل (ON) */
         .power-btn.active {
             background-color: rgba(26, 26, 26, 0.9);
             color: #28a745;
             border-color: #28a745;
             box-shadow: 0 0 40px #28a745, inset 0 0 20px #28a745;
         }
+        /* حالة الإيقاف (OFF) */
         .power-btn.error {
             background-color: rgba(26, 26, 26, 0.9);
             color: #dc3545;
@@ -66,25 +98,6 @@
             box-shadow: 0 0 40px #dc3545, inset 0 0 20px #dc3545;
         }
 
-        /* تصميم زر أداة AIO */
-        .aio-btn {
-            padding: 15px 35px;
-            background-color: rgba(0, 123, 255, 0.85);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-            margin-bottom: 20px;
-            backdrop-filter: blur(3px);
-        }
-        .aio-btn:hover {
-            background-color: rgba(0, 86, 179, 0.95);
-            transform: scale(1.05);
-        }
-        
         #status {
             font-size: 22px;
             font-weight: bold;
@@ -92,7 +105,7 @@
             text-shadow: 2px 2px 4px #000;
         }
 
-        /* الزوايا السفلية (الساعة وتويتر) */
+        /* الزوايا السفلية */
         .bottom-left, .bottom-right {
             position: absolute;
             bottom: 20px;
@@ -109,7 +122,7 @@
             font-size: 24px;
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
-            direction: ltr; /* لضمان ظهور الساعة بشكل صحيح */
+            direction: ltr; 
         }
         .bottom-right {
             right: 20px;
@@ -125,6 +138,7 @@
             width: 25px;
             height: 25px;
             margin-left: 10px;
+            margin-right: 10px;
             fill: #1DA1F2;
         }
 
@@ -132,33 +146,51 @@
 </head>
 <body>
 
-    <!-- الاسم في الأعلى -->
+    <!-- نافذة الإعداد لأول مرة -->
+    <div id="setupModal">
+        <div class="modal-content">
+            <h2>الإعداد لأول مرة<br>First Time Setup</h2>
+            
+            <label>اختر اللغة / Select Language:</label>
+            <select id="langSelect">
+                <option value="ar">العربية (Arabic)</option>
+                <option value="en">English (الإنجليزية)</option>
+                <option value="pt">Português (Brazilian)</option>
+                <option value="ru">Русский (Russian)</option>
+            </select>
+
+            <label>نظام الوقت / Time Format:</label>
+            <select id="timeSelect">
+                <option value="12">12-Hour (AM/PM)</option>
+                <option value="24">24-Hour</option>
+            </select>
+
+            <button onclick="saveSetup()">حفظ و دخول / Save & Enter</button>
+        </div>
+    </div>
+
+    <!-- الواجهة الرئيسية -->
     <div class="header-title">Vladimir Putin</div>
 
-    <!-- زر الطاقة الرئيسي -->
+    <!-- زر الجيلبريك -->
     <button id="powerBtn" class="power-btn" onclick="toggleJailbreak()">
-        &#x23FB;
+        Jailbreak OFF
     </button>
 
-    <!-- زر أداة AIO -->
-    <button class="aio-btn" onclick="runAIO()">
-        تفعيل أداة AIO (منع إطفاء الجهاز)
-    </button>
+    <div id="status">النظام جاهز... اضغط على الزر للبدء</div>
 
-    <div id="status">النظام جاهز... اضغط على زر الطاقة للبدء</div>
-
-    <!-- ساعة الوقت بنظام 12 في الزاوية اليسرى -->
+    <!-- ساعة الوقت -->
     <div class="bottom-left" id="clock">00:00:00</div>
 
-    <!-- أيقونة تويتر في الزاوية اليمنى -->
-    <a href="#" class="bottom-right">
-        <span>تويتر</span>
+    <!-- أيقونة تويتر -->
+    <a href="#" class="bottom-right" id="twitterBtn">
+        <span id="twitterText">تويتر</span>
         <svg class="twitter-icon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"></path>
         </svg>
     </a>
 
-    <!-- استدعاء ملفات التعديل الأصلية -->
+    <!-- ملفات التعديل الأصلية -->
     <script src="int64.js"></script>
     <script src="ps4_offsets.js"></script>
     <script src="core.js"></script>
@@ -166,62 +198,158 @@
     <script src="jb.js"></script>
     
     <script>
-        // --- سكربت الجيلبريك وأزرار الواجهة ---
+        // --- قاموس اللغات ---
+        const translations = {
+            ar: {
+                statusReady: "النظام جاهز... اضغط على الزر للبدء",
+                statusInjecting: "جاري حقن التعديل...",
+                statusSuccess: "تم تفعيل التعديل بنجاح!",
+                statusOff: "تم تعطيل التعديل",
+                jbOn: "جيلبريك ON",
+                jbOff: "جيلبريك OFF",
+                twitter: "تويتر",
+                dir: "rtl"
+            },
+            en: {
+                statusReady: "System ready... Press the button to start",
+                statusInjecting: "Injecting payload...",
+                statusSuccess: "Jailbreak activated successfully!",
+                statusOff: "Jailbreak disabled",
+                jbOn: "Jailbreak ON",
+                jbOff: "Jailbreak OFF",
+                twitter: "Twitter",
+                dir: "ltr"
+            },
+            pt: {
+                statusReady: "Sistema pronto... Pressione o botão para iniciar",
+                statusInjecting: "Injetando payload...",
+                statusSuccess: "Desbloqueio ativado com sucesso!",
+                statusOff: "Desbloqueio desativado",
+                jbOn: "Jailbreak ON",
+                jbOff: "Jailbreak OFF",
+                twitter: "Twitter",
+                dir: "ltr"
+            },
+            ru: {
+                statusReady: "Система готова... Нажмите кнопку для запуска",
+                statusInjecting: "Внедрение payload...",
+                statusSuccess: "Взлом успешно активирован!",
+                statusOff: "Взлом отключен",
+                jbOn: "Jailbreak ON",
+                jbOff: "Jailbreak OFF",
+                twitter: "Twitter",
+                dir: "ltr"
+            }
+        };
+
+        let currentLang = 'ar';
+        let is24Hour = false;
         let isJailbroken = false;
+        
         const powerBtn = document.getElementById('powerBtn');
         const statusText = document.getElementById('status');
 
+        // --- نظام حفظ الإعدادات لأول مرة ---
+        window.onload = function() {
+            if (!localStorage.getItem('setupDone')) {
+                // إظهار نافذة الإعداد إذا لم يتم إعدادها مسبقاً
+                document.getElementById('setupModal').style.display = 'flex';
+            } else {
+                // تحميل الإعدادات المحفوظة
+                currentLang = localStorage.getItem('userLang');
+                is24Hour = localStorage.getItem('timeFormat') === '24';
+                applyLanguage(currentLang);
+            }
+            updateClock();
+        };
+
+        function saveSetup() {
+            const lang = document.getElementById('langSelect').value;
+            const timeFmt = document.getElementById('timeSelect').value;
+            
+            // حفظ الإعدادات في المتصفح
+            localStorage.setItem('userLang', lang);
+            localStorage.setItem('timeFormat', timeFmt);
+            localStorage.setItem('setupDone', 'true');
+            
+            currentLang = lang;
+            is24Hour = (timeFmt === '24');
+            
+            // إخفاء النافذة وتطبيق الإعدادات
+            document.getElementById('setupModal').style.display = 'none';
+            applyLanguage(currentLang);
+        }
+
+        function applyLanguage(lang) {
+            const t = translations[lang];
+            document.getElementById('htmlTag').dir = t.dir;
+            document.getElementById('twitterText').innerText = t.twitter;
+            
+            // تحديث نصوص الواجهة حسب الحالة
+            if (isJailbroken) {
+                statusText.innerText = t.statusSuccess;
+                powerBtn.innerText = t.jbOn;
+            } else {
+                statusText.innerText = t.statusReady;
+                powerBtn.innerText = t.jbOff;
+            }
+        }
+
+        // --- سكربت الجيلبريك ---
         function toggleJailbreak() {
+            const t = translations[currentLang];
+            
             if (!isJailbroken) {
+                // تفعيل
                 powerBtn.className = 'power-btn active';
-                statusText.innerText = "جاري حقن التعديل...";
+                statusText.innerText = t.statusInjecting;
                 statusText.style.color = "#28a745";
+                powerBtn.innerText = "WAIT...";
                 
                 setTimeout(() => {
-                    statusText.innerText = "تم تفعيل التعديل بنجاح!";
+                    statusText.innerText = t.statusSuccess;
+                    powerBtn.innerText = t.jbOn;
                     isJailbroken = true;
                 }, 1500);
 
             } else {
+                // إيقاف
                 powerBtn.className = 'power-btn error';
-                statusText.innerText = "تم تعطيل التعديل";
+                statusText.innerText = t.statusOff;
                 statusText.style.color = "#dc3545";
+                powerBtn.innerText = t.jbOff;
                 isJailbroken = false;
+                
+                setTimeout(() => {
+                    statusText.innerText = t.statusReady;
+                    statusText.style.color = "#fff";
+                }, 2000);
             }
         }
 
-        function runAIO() {
-            statusText.innerText = "جاري تحميل أداة AIO لإصلاح الوميض الأبيض...";
-            statusText.style.color = "#00bfff";
-            
-            setTimeout(() => {
-                statusText.innerText = "تم تطبيق أداة AIO بنجاح!";
-            }, 1500);
-        }
-
-        // --- سكربت الساعة (نظام 12 ساعة) ---
+        // --- سكربت الساعة (يدعم 12 و 24) ---
         function updateClock() {
             const now = new Date();
             let hours = now.getHours();
             let minutes = now.getMinutes();
             let seconds = now.getSeconds();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
+            let ampm = '';
             
-            // تحويل الساعات إلى نظام 12
-            hours = hours % 12;
-            hours = hours ? hours : 12; 
+            if (!is24Hour) {
+                ampm = hours >= 12 ? ' PM' : ' AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; 
+            }
             
             // إضافة صفر للأرقام الأقل من 10
+            hours = hours < 10 ? '0' + hours : hours;
             minutes = minutes < 10 ? '0' + minutes : minutes;
             seconds = seconds < 10 ? '0' + seconds : seconds;
             
-            const timeString = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-            document.getElementById('clock').innerText = timeString;
+            document.getElementById('clock').innerText = hours + ':' + minutes + ':' + seconds + ampm;
         }
         
-        // تحديث الساعة كل ثانية
         setInterval(updateClock, 1000);
-        updateClock(); // تشغيلها فورا عند تحميل الصفحة
     </script>
 </body>
 </html>
